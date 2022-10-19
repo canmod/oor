@@ -21,8 +21,12 @@ Printer = function(x) {
   self = Testable()
   self$.x = x
   self$valid = function() {
-     if (!is.character(self$.x)) return("can only print character strings")
-     if (length(self$.x) != 1L) return("can only print length-1 character vectors")
+     if (!is.character(self$.x)) {
+       return("can only print character strings")
+     }
+     if (length(self$.x) != 1L) {
+       return("can only print length-1 character vectors")
+     }
      return(TRUE)
   }
   self$print = function() print(self$.x)
