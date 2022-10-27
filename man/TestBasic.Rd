@@ -10,7 +10,7 @@ TestBasic(basic_tester)
 \item{basic_tester}{An object that can be converted to a function}
 }
 \value{
-Object of class \code{\link{TestSteps}} that evaluates
+Object of class \code{\link{Test}} that evaluates
 the \code{basic_tester}.
 }
 \description{

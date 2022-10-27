@@ -10,7 +10,7 @@ MappedSummarizer(...)
 \item{...}{A list of summarizing functions.}
 }
 \value{
-Object of class \code{\link{TestSteps}} that summarizes each
+Object of class \code{\link{Test}} that summarizes each
 element of objects to test.
 }
 \description{

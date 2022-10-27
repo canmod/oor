@@ -50,10 +50,7 @@ validate_object = function(object) {
 #' @return New object of class given by \code{class}.
 #' @export
 return_object = function(self, class) {
-  clean_method_environment(parent.frame())
-  object = structure(self, class = c(class, unique(class(self))))
-  validate_object(object)
-  return(object)
+  UseMethod("return_object", self)
 }
 
 #' Inheritance

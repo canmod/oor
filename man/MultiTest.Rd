@@ -13,14 +13,14 @@ All(...)
 Any(...)
 }
 \arguments{
-\item{test_function_list}{List of objects of class \code{\link{TestSteps}}
+\item{test_function_list}{List of objects of class \code{\link{Test}}
 or \code{\link{function}}.}
 
 \item{boolean_aggregator}{A function that summarizes a \code{\link{logical}}
 vector.}
 }
 \value{
-Object of class \code{\link{TestSteps}} that tests several
+Object of class \code{\link{Test}} that tests several
 criteria at the same time.
 }
 \description{

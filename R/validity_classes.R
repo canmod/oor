@@ -1,41 +1,40 @@
 #' Validity Messager
 #'
-#' Couple a test function and failure message, so that if the test function
-#' does not return \code{TRUE} then the failure message is given.
+#' Couple a test function with a failure message
 #'
-#' This class useful when building \code{valid} methods in
-#' \code{\link{Testable}} classes.
+#' \code{ValidityMessager} objects have an \code{assert} method
+#' with one argument, \code{x}. If the test function evaluates to
+#' \code{\link{TRUE}} then the argument, \code{x}, is returned. If
+#' it does not return \code{\link{TRUE}} then the failure message is given.
 #'
 #' @param test_function Object that is coercible to a \code{\link{function}},
 #' typically a function that will return a length-1 \code{\link{logical}}
 #' vector. Often this object will inherit from \code{\link{TestSteps}},
 #' which provides a way to compose object tests.
-#' @param fail_message Length-1 \code{\link{character}} vector to display
+#' @param ... Length-1 \code{\link{character}} vectors to display
 #' if \code{test_function} does not return \code{TRUE}.
 #'
 #' @return Object of class \code{ValidityMessager} containing a \code{check}
 #' method that will return \code{TRUE} or fail with \code{fail_message}.
 #'
 #' @examples
-#' ValidityMessager(is.numeric, "not numeric")$check("1") ## "not numeric"
+#' is_numeric = ValidityMessager(is.numeric, "not numeric")
+#'
+#' is_numeric$check("1")
 #'
 #' HoldANumber = function(x) {
-#'   self = Testable()
-#'   self$x = x
-#'   self$.numeric_validity = ValidityMessager(is.numeric, "not numeric")
-#'   self$valid = function() {
-#'     self$.numeric_validity$check(self$x)
-#'   }
-#'   return_object(self, "G")
+#'   self = Base()
+#'   self$x =  is_numeric$assert(x)
+#'   return_object(self, "HoldANumber")
 #' }
 #' try(HoldANumber("a")) ## error message
 #' HoldANumber(1) ## success
 #'
 #' @export
-ValidityMessager = function(test_function, fail_message) {
+ValidityMessager = function(test_function, ...) {
   self = Base()
   self$.test_function = as.function(test_function)
-  self$.fail_message = as.character(fail_message)
+  self$.fail_message = pasten(...)
   stopifnot(length(formals(args(self$.test_function))) == 1L)
   self$.error = function(test_result) inherits(test_result, "try-error")
   self$.test_error_message = function(test_result) {
@@ -54,12 +53,22 @@ ValidityMessager = function(test_function, fail_message) {
       ,sep = "\n"
     )
   }
+  self$assert = function(x) {
+    result = try(self$.test_function(x), silent = TRUE)
+    if (isTRUE(result)) return(x)
+    if (isFALSE(result)) stop(self$.fail_message)
+    if (self$.error(result)) stop(self$.test_error_message(result))
+    stop(self$.test_inconclusive_message(result))
+  }
   self$check = function(x) {
     result = try(self$.test_function(x), silent = TRUE)
     if (isTRUE(result)) return(TRUE)
-    if (isFALSE(result)) return(self$.fail_message)
+    if (isFALSE(result)) stop(self$.fail_message)
     if (self$.error(result)) stop(self$.test_error_message(result))
     stop(self$.test_inconclusive_message(result))
+  }
+  self$is_true = function(x) {
+    return(isTRUE(try(self$.test_function(x), silent = TRUE)))
   }
   return_object(self, "ValidityMessager")
 }

@@ -30,6 +30,12 @@ Base = function() {
   structure(self, class = "Base")
 }
 
+#' @export
+Unclean = function() {
+  self = Base()
+  return_object(self, "Unclean")
+}
+
 #' Testable Class
 #'
 #' Initialize an object with functionality for validating objects

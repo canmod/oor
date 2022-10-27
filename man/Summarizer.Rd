@@ -10,7 +10,7 @@ Summarizer(...)
 \item{...}{A list of summarizing functions.}
 }
 \value{
-Object of class \code{\link{TestSteps}} that summarizes objects
+Object of class \code{\link{Test}} that summarizes objects
 to test.
 }
 \description{

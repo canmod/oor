@@ -4,31 +4,42 @@
 #' argument, \code{x}, and returns a length-one \code{\link{logical}} vector.
 #'
 #' @export
-TestSteps = function() {
+Test = function() {
   self = Base()
-  self$apply = function(x) logical(1L)
-  return_object(self, "TestSteps")
+  self$apply = function(x) TRUE
+  return_object(self, "Test")
 }
 
 # Dunder methods to make sure that functions, Valid, and Test objects
 # can all be used interchangably as test_functions
 
-#' @rdname TestSteps
+#' @rdname Test
 #' @export
-as.function.TestSteps = function(x, ...) x$apply
+as.function.Test = function(x, ...) x$apply
+
+#' Placeholder for a Test
+#'
+#' Always return \code{\link{TRUE}}.
+#'
+#' @export
+TestPlaceholder = function() {
+  self = Test()
+  self$apply = function(x) {TRUE}
+  return_object(self, "TestPlaceholder")
+}
 
 #' Basic Test
 #'
 #' @param basic_tester An object that can be converted to a function
 #'
-#' @return Object of class \code{\link{TestSteps}} that evaluates
+#' @return Object of class \code{\link{Test}} that evaluates
 #' the \code{basic_tester}.
 #' @export
 TestBasic = function(basic_tester) {
-  self = TestSteps()
+  self = Test()
   self$.basic_tester = as.function(basic_tester)
   self$apply = function(x) {
-    self$.basic_tester(x)
+    isTRUE(self$.basic_tester(x))
   }
   return_object(self, "TestBasic")
 }
@@ -37,7 +48,7 @@ TestBasic = function(basic_tester) {
 #'
 #' @param basic_tester An object that can be converted to a function
 #'
-#' @return Object of class \code{\link{TestSteps}} that evaluates the
+#' @return Object of class \code{\link{Test}} that evaluates the
 #' complement of \code{basic_tester}.
 #'
 #' @examples
@@ -55,11 +66,11 @@ Not = function(basic_tester) {
 
 #' Test Pipeline
 #'
-#' @param ... Objects of class \code{\link{TestSteps}} or \code{\link{function}}.
-#' The final object in this list must be either a \code{TestSteps} object
+#' @param ... Objects of class \code{\link{Test}} or \code{\link{function}}.
+#' The final object in this list must be either a \code{Test} object
 #' with an \code{apply} method that returns a length-one logical vector
 #' or a function that does so.
-#' @return Object inheriting from \code{\link{TestSteps}}
+#' @return Object inheriting from \code{\link{Test}}
 #'
 #' @examples
 #' is_matrix = TestPipeline(
@@ -78,16 +89,16 @@ Not = function(basic_tester) {
 #'
 #' @export
 TestPipeline = function(...) {
-  self = TestSteps()
+  self = Test()
   self$.stages = list(...)
   self$apply = function(x) {
     for (stage in self$.stages) {
       x = stage$apply(x)
     }
-    if (!(is.logical(x) & length(x) == 1L)) {
-      stop("object testing pipeline failed to return boolean")
-    }
-    return(x)
+    #if (!(is.logical(x) & length(x) == 1L)) {
+    #  stop("object testing pipeline failed to return boolean")
+    #}
+    return(isTRUE(x))
   }
   return_object(self, "TestPipeline")
 }
@@ -100,11 +111,11 @@ TestPipeline = function(...) {
 #'
 #' @param ... A list of summarizing functions.
 #'
-#' @return Object of class \code{\link{TestSteps}} that summarizes objects
+#' @return Object of class \code{\link{Test}} that summarizes objects
 #' to test.
 #' @export
 Summarizer = function(...) {
-  self = TestSteps()
+  self = Test()
   self$.summary_function_list = lapply(list(...), as.function)
   self$apply = function(x) {
     for (f in self$.summary_function_list) x = f(x)
@@ -122,7 +133,7 @@ Summarizer = function(...) {
 #'
 #' @param ... A list of summarizing functions.
 #'
-#' @return Object of class \code{\link{TestSteps}} that summarizes each
+#' @return Object of class \code{\link{Test}} that summarizes each
 #' element of objects to test.
 #' @export
 MappedSummarizer = function(...) {
@@ -134,16 +145,38 @@ MappedSummarizer = function(...) {
   return_object(self, "MappedSummarizer")
 }
 
+#' @export
+MappedTest = function(basic_tester, boolean_aggregator) {
+  self = TestBasic(basic_tester)
+  self$.boolean_aggregator = boolean_aggregator
+  self$apply = function(x) {
+    self$.boolean_aggregator(
+      vapply(lapply(x, self$.basic_tester), isTRUE, logical(1L))
+    )
+  }
+  return_object(self, "MappedTest")
+}
+
+#' @export
+MappedAllTest = function(basic_tester) {
+  MappedTest(basic_tester, all)
+}
+
+#' @export
+MappedAnyTest = function(basic_tester) {
+  MappedTest(basic_tester, any)
+}
+
 #' Multi Test
 #'
 #' Assess several criteria.
 #'
-#' @param test_function_list List of objects of class \code{\link{TestSteps}}
+#' @param test_function_list List of objects of class \code{\link{Test}}
 #' or \code{\link{function}}.
 #' @param boolean_aggregator A function that summarizes a \code{\link{logical}}
 #' vector.
 #'
-#' @return Object of class \code{\link{TestSteps}} that tests several
+#' @return Object of class \code{\link{Test}} that tests several
 #' criteria at the same time.
 #'
 #' @examples
@@ -162,7 +195,7 @@ MappedSummarizer = function(...) {
 #'
 #' @export
 MultiTest = function(test_function_list, boolean_aggregator) {
-  self = TestSteps()
+  self = Test()
   self$.test_function_list = lapply(test_function_list, as.function)
   self$.boolean_aggregator = as.function(boolean_aggregator)
   self$apply = function(x) {
@@ -184,10 +217,11 @@ Any = function(...) MultiTest(list(...), any)
 #'
 #' Test that all elements in an object are identical.
 #'
-#' @return Object of class \code{\link{TestSteps}} that tests that all
+#' @return Object of class \code{\link{Test}} that tests that all
 #' elements in an object are identical.
+#' @export
 TestHomo = function() {
-  self = TestSteps()
+  self = Test()
   self$apply = function(x) {
     length(unique(x)) == 1L
   }
@@ -202,11 +236,11 @@ TestHomo = function() {
 #' @param lower Lower bound
 #' @param upper Upper bound
 #'
-#' @return Object of class \code{\link{TestSteps}} that tests that all
+#' @return Object of class \code{\link{Test}} that tests that all
 #' elements in an object numerically on a particular range.
 #' @export
 TestRange = function(lower, upper) {
-  self = TestSteps()
+  self = Test()
   self$.lower = lower
   self$.upper = upper
   self$apply = function(x) {
@@ -221,14 +255,34 @@ TestRange = function(lower, upper) {
 #'
 #' @param set Universe of possibilities.
 #'
-#' @return Object of class \code{\link{TestSteps}} that tests that all
+#' @return Object of class \code{\link{Test}} that tests that all
 #' elements in an object are in a particular set.
 #' @export
 TestSubset = function(set) {
-  self = TestSteps()
+  self = Test()
   self$.set = set
   self$apply = function(x) {
     all(x %in% self$.set)
   }
   return_object(self, "TestSubset")
+}
+
+#' @export
+TestTrue = function() {
+  TestBasic(isTRUE)
+}
+
+#' @export
+TestFalse = function() {
+  TestBasic(isFALSE)
+}
+
+#' @export
+Is = function(class) {
+  self = Test()
+  self$.class = class
+  self$apply = function(x) {
+    inherits(x, self$.class)
+  }
+  return_object(self, "Is")
 }

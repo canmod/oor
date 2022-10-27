@@ -12,7 +12,7 @@ TestRange(lower, upper)
 \item{upper}{Upper bound}
 }
 \value{
-Object of class \code{\link{TestSteps}} that tests that all
+Object of class \code{\link{Test}} that tests that all
 elements in an object numerically on a particular range.
 }
 \description{

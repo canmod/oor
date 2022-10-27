@@ -10,7 +10,7 @@ TestSubset(set)
 \item{set}{Universe of possibilities.}
 }
 \value{
-Object of class \code{\link{TestSteps}} that tests that all
+Object of class \code{\link{Test}} that tests that all
 elements in an object are in a particular set.
 }
 \description{

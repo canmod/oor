@@ -4,7 +4,7 @@
 \alias{ValidityMessager}
 \title{Validity Messager}
 \usage{
-ValidityMessager(test_function, fail_message)
+ValidityMessager(test_function, ...)
 }
 \arguments{
 \item{test_function}{Object that is coercible to a \code{\link{function}},
@@ -12,7 +12,7 @@ typically a function that will return a length-1 \code{\link{logical}}
 vector. Often this object will inherit from \code{\link{TestSteps}},
 which provides a way to compose object tests.}
 
-\item{fail_message}{Length-1 \code{\link{character}} vector to display
+\item{...}{Length-1 \code{\link{character}} vectors to display
 if \code{test_function} does not return \code{TRUE}.}
 }
 \value{
@@ -20,24 +20,23 @@ Object of class \code{ValidityMessager} containing a \code{check}
 method that will return \code{TRUE} or fail with \code{fail_message}.
 }
 \description{
-Couple a test function and failure message, so that if the test function
-does not return \code{TRUE} then the failure message is given.
+Couple a test function with a failure message
 }
 \details{
-This class useful when building \code{valid} methods in
-\code{\link{Testable}} classes.
+\code{ValidityMessager} objects have an \code{assert} method
+with one argument, \code{x}. If the test function evaluates to
+\code{\link{TRUE}} then the argument, \code{x}, is returned. If
+it does not return \code{\link{TRUE}} then the failure message is given.
 }
 \examples{
-ValidityMessager(is.numeric, "not numeric")$check("1") ## "not numeric"
+is_numeric = ValidityMessager(is.numeric, "not numeric")
+
+is_numeric$check("1")
 
 HoldANumber = function(x) {
-  self = Testable()
-  self$x = x
-  self$.numeric_validity = ValidityMessager(is.numeric, "not numeric")
-  self$valid = function() {
-    self$.numeric_validity$check(self$x)
-  }
-  return_object(self, "G")
+  self = Base()
+  self$x =  is_numeric$assert(x)
+  return_object(self, "HoldANumber")
 }
 try(HoldANumber("a")) ## error message
 HoldANumber(1) ## success

@@ -7,13 +7,13 @@
 TestPipeline(...)
 }
 \arguments{
-\item{...}{Objects of class \code{\link{TestSteps}} or \code{\link{function}}.
-The final object in this list must be either a \code{TestSteps} object
+\item{...}{Objects of class \code{\link{Test}} or \code{\link{function}}.
+The final object in this list must be either a \code{Test} object
 with an \code{apply} method that returns a length-one logical vector
 or a function that does so.}
 }
 \value{
-Object inheriting from \code{\link{TestSteps}}
+Object inheriting from \code{\link{Test}}
 }
 \description{
 Test Pipeline

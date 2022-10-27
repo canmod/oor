@@ -10,7 +10,7 @@ Not(basic_tester)
 \item{basic_tester}{An object that can be converted to a function}
 }
 \value{
-Object of class \code{\link{TestSteps}} that evaluates the
+Object of class \code{\link{Test}} that evaluates the
 complement of \code{basic_tester}.
 }
 \description{
