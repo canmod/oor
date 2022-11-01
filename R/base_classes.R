@@ -31,8 +31,14 @@ Base = function() {
 }
 
 #' @export
+BaseBase = function() {
+  self = new.env(parent = baseenv())
+  structure(self, class = "Base")
+}
+
+#' @export
 Unclean = function() {
-  self = Base()
+  self = BaseBase()
   return_object(self, "Unclean")
 }
 
