@@ -10,6 +10,9 @@
 #' \link[=inheritance]{Inherit} from \code{Base} if you want to start
 #' from an empty class
 #'
+#' @param starting_environment An environment to enclose the empty object.
+#' This enclosing environment is useful for making
+#'
 #' @examples
 #' empty_object = Base()
 #' print(empty_object)
@@ -25,20 +28,14 @@
 #' printer$print()
 #'
 #' @export
-Base = function() {
-  self = new.env(parent = emptyenv())
-  structure(self, class = "Base")
-}
-
-#' @export
-BaseBase = function() {
-  self = new.env(parent = baseenv())
+Base = function(starting_environment = emptyenv()) {
+  self = new.env(parent = starting_environment)
   structure(self, class = "Base")
 }
 
 #' @export
 Unclean = function() {
-  self = BaseBase()
+  self = Base(baseenv())
   return_object(self, "Unclean")
 }
 

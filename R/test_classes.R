@@ -145,6 +145,13 @@ MappedSummarizer = function(...) {
   return_object(self, "MappedSummarizer")
 }
 
+#' Mapped Test
+#'
+#' Apply a \code{\link{Test}} to each element of a list.
+#'
+#' @inheritParams TestBasic
+#' @inheritParams MultiTest
+#'
 #' @export
 MappedTest = function(basic_tester, boolean_aggregator) {
   self = TestBasic(basic_tester)
@@ -157,11 +164,20 @@ MappedTest = function(basic_tester, boolean_aggregator) {
   return_object(self, "MappedTest")
 }
 
+#' Mapped All Test
+#'
+#' Test that all \code{\link{MappedTest}} results are \code{\link{TRUE}}
+#' @inheritParams TestBasic
 #' @export
 MappedAllTest = function(basic_tester) {
   MappedTest(basic_tester, all)
 }
 
+#' Mapped Any Test
+#'
+#' Test that any \code{\link{MappedTest}} results are \code{\link{TRUE}}
+#'
+#' @inheritParams TestBasic
 #' @export
 MappedAnyTest = function(basic_tester) {
   MappedTest(basic_tester, any)
@@ -267,16 +283,22 @@ TestSubset = function(set) {
   return_object(self, "TestSubset")
 }
 
+#' Test True
+#'
 #' @export
 TestTrue = function() {
   TestBasic(isTRUE)
 }
 
+#' Test False
+#'
 #' @export
 TestFalse = function() {
   TestBasic(isFALSE)
 }
 
+#' Test inheritance
+#' @param class Name of a class to test for.
 #' @export
 Is = function(class) {
   self = Test()

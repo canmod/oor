@@ -4,7 +4,11 @@
 \alias{Base}
 \title{Base Class}
 \usage{
-Base()
+Base(starting_environment = emptyenv())
+}
+\arguments{
+\item{starting_environment}{An environment to enclose the empty object.
+This enclosing environment is useful for making}
 }
 \description{
 Initialize an empty object.

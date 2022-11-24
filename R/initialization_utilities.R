@@ -119,3 +119,13 @@ implements = function(interface) {
   object$.implements(interface)
   return(object)
 }
+
+#' @export
+return_facade = function(self, private, class) {
+  assign("self", self, envir = private)
+  f_nms = names(which(unlist(eapply(self, is.function))))
+  for (f_nm in f_nms) {
+    environment(self[[f_nm]]) = private
+  }
+  structure(self, class = c(class, unique(class(self))))
+}
