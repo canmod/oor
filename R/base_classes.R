@@ -11,7 +11,9 @@
 #' from an empty class
 #'
 #' @param starting_environment An environment to enclose the empty object.
-#' This enclosing environment is useful for making
+#' This enclosing environment is useful for making things other than \code{self}
+#' available to methods. I have found that it is usually best to ignore this
+#' possibility, but it might indeed be useful from time-to-time.
 #'
 #' @examples
 #' empty_object = Base()
@@ -26,6 +28,16 @@
 #' }
 #' printer = Printer("something to print")
 #' printer$print()
+#'
+#' SupportivePrinter = function(x) {
+#'   self = Printer(x)
+#'   self$print = function() {
+#'     print(paste(sQuote(self$.x), "is a very nice thing to say"))
+#'   }
+#'   return_object(self, "Supportive")
+#' }
+#' supportive_printer = SupportivePrinter("something to print")
+#' supportive_printer$print()
 #'
 #' @export
 Base = function(starting_environment = emptyenv()) {

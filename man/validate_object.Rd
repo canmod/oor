@@ -15,6 +15,4 @@ TODO -- check $valid methods
 \description{
 S3 generic for checking the validity of a constructed
 object. should either return nothing or trigger an error.
-Typically these S3 methods will make use of object$valid
-methods.
 }

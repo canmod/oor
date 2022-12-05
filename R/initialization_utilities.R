@@ -30,8 +30,6 @@ clean_method_environment = function(e) {
 #'
 #' S3 generic for checking the validity of a constructed
 #' object. should either return nothing or trigger an error.
-#' Typically these S3 methods will make use of object$valid
-#' methods.
 #'
 #' @param object Object to be validated.
 #' @return TODO -- check $valid methods
@@ -43,7 +41,7 @@ validate_object = function(object) {
 #' Return Object
 #'
 #' This should be the final function called in a class
-#' definition. think of it like return(...)
+#' definition. Think of it like return(...)
 #'
 #' @param self New object.
 #' @param class String giving the class name.

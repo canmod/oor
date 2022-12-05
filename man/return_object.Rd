@@ -16,5 +16,5 @@ New object of class given by \code{class}.
 }
 \description{
 This should be the final function called in a class
-definition. think of it like return(...)
+definition. Think of it like return(...)
 }
