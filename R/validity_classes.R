@@ -9,7 +9,7 @@
 #'
 #' @param test_function Object that is coercible to a \code{\link{function}},
 #' typically a function that will return a length-1 \code{\link{logical}}
-#' vector. Often this object will inherit from \code{\link{TestSteps}},
+#' vector. Often this object will inherit from \code{\link{Test}},
 #' which provides a way to compose object tests.
 #' @param ... Length-1 \code{\link{character}} vectors to display
 #' if \code{test_function} does not return \code{TRUE}.
@@ -20,7 +20,7 @@
 #' @examples
 #' is_numeric = ValidityMessager(is.numeric, "not numeric")
 #'
-#' is_numeric$check("1")
+#' try(is_numeric$check("1"))
 #'
 #' HoldANumber = function(x) {
 #'   self = Base()

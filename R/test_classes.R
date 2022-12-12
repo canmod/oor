@@ -13,6 +13,8 @@ Test = function() {
 # Dunder methods to make sure that functions, Valid, and Test objects
 # can all be used interchangably as test_functions
 
+#' @param x \code{Test} object to convert to a \code{\link{function}}
+#' @param ... Not used.  Present for S3 method consistency.
 #' @rdname Test
 #' @export
 as.function.Test = function(x, ...) x$apply
@@ -85,7 +87,7 @@ Not = function(basic_tester) {
 #'   All(TestRange(0, 2))
 #' )
 #' each_is_matrix$apply(list(1, matrix(1, 2, 3), "a")) # TRUE
-#' each_is_matrix$apply(list(1, array(1, c(2, 3, 4), "a"))) # FALSE
+#' each_is_matrix$apply(list(1, array(1, c(2, 3, 4)), "a")) # FALSE
 #'
 #' @export
 TestPipeline = function(...) {
@@ -221,6 +223,7 @@ MultiTest = function(test_function_list, boolean_aggregator) {
   return_object(self, "MultiTest")
 }
 
+#' @param ... Test functions.
 #' @describeIn MultiTest Test that all of the criteria are met.
 #' @export
 All = function(...) MultiTest(list(...), all)

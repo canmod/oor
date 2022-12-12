@@ -24,10 +24,10 @@ Print = function(x) {
 Printer = function() {
   self = Trait()
   self$print = function() print(self$.x)
-  return_object(self, "PrinterTrait")
+  return_object(self, "Printer")
 }
 PrintString = function(x) {
-  self = inherit_from(Print, list(PrinterTrait), x)
+  self = inherit_from(Print, list(Printer), x)
   self$valid = function() {
      if (!is.character(self$.x)) return("can only print character strings")
      if (length(self$.x) != 1L) return("can only print length-1 character vectors")
@@ -36,7 +36,7 @@ PrintString = function(x) {
   return_object(self, "PrintString")
 }
 PrintNumber = function(x) {
-  self = inherit_from(Print, list(PrinterTrait), x)
+  self = inherit_from(Print, list(Printer), x)
   self$valid = function() {
      if (!is.numeric(self$.x)) return("can only print character strings")
      return(TRUE)

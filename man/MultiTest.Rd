@@ -18,6 +18,8 @@ or \code{\link{function}}.}
 
 \item{boolean_aggregator}{A function that summarizes a \code{\link{logical}}
 vector.}
+
+\item{...}{Test functions.}
 }
 \value{
 Object of class \code{\link{Test}} that tests several

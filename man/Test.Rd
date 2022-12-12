@@ -9,6 +9,11 @@ Test()
 
 \method{as.function}{Test}(x, ...)
 }
+\arguments{
+\item{x}{\code{Test} object to convert to a \code{\link{function}}}
+
+\item{...}{Not used.  Present for S3 method consistency.}
+}
 \value{
 Object with an \code{apply} method that takes a single
 argument, \code{x}, and returns a length-one \code{\link{logical}} vector.

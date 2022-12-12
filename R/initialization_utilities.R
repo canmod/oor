@@ -118,6 +118,13 @@ implements = function(interface) {
   return(object)
 }
 
+#' Return Facade
+#'
+#' Experimental
+#'
+#' @inheritParams return_object
+#' @param private Environment to use for containing private methods and fields.
+#'
 #' @export
 return_facade = function(self, private, class) {
   assign("self", self, envir = private)

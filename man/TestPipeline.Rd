@@ -31,6 +31,6 @@ each_is_matrix = TestPipeline(
   All(TestRange(0, 2))
 )
 each_is_matrix$apply(list(1, matrix(1, 2, 3), "a")) # TRUE
-each_is_matrix$apply(list(1, array(1, c(2, 3, 4), "a"))) # FALSE
+each_is_matrix$apply(list(1, array(1, c(2, 3, 4)), "a")) # FALSE
 
 }
