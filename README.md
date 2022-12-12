@@ -1,5 +1,7 @@
 # Lightweight Tools for Object Oriented Programming
 
+[![R-CMD-check](https://github.com/canmod/oor/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/canmod/oor/actions/workflows/R-CMD-check.yaml)
+
 ## Why?
 
 Many object oriented programming frameworks exist for R, so why another? I wanted minimal magic, to develop a very solid understanding and use of basic R concepts (e.g. environments), and to have no dependencies on third-party packages. 
