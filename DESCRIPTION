@@ -1,6 +1,6 @@
 Package: oor
 Title: Object Oriented R
-Version: 0.0.0.9000
+Version: 0.0.1
 Authors@R: 
     person("Steve", "Walker", , "swalk@mcmaster.ca", role = c("aut", "cre"))
 Description: Lightweight tools for building object-oriented R code.
