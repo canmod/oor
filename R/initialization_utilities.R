@@ -26,6 +26,19 @@ clean_method_environment = function(e) {
   rm(list = objects_to_clean, envir = e)
 }
 
+debug_methods = function(object) {
+  l = oor::oor_debug$list_flagged()
+  i = vapply(l$class, function(x) inherits(object, x), logical(1L))
+  candidate_methods = l[i, , drop = FALSE]$method
+  i = vapply(candidate_methods, oor::oor_debug$.objects$.is_method, logical(1L), object)
+  methods_to_debug = candidate_methods[i]
+  oor::oor_debug$.objects$.is_method(methods_to_debug[1], object)
+  for (j in methods_to_debug) debug(object[[j]])
+  if (isTRUE(length(methods_to_debug) > 0L)) {
+    oor::oor_debug$.objects$.add(methods_to_debug, object)
+  }
+}
+
 #' Validate Object
 #'
 #' S3 generic for checking the validity of a constructed

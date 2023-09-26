@@ -2,10 +2,7 @@
 #'
 #' Couple a test function with a failure message
 #'
-#' \code{ValidityMessager} objects have an \code{assert} method
-#' with one argument, \code{x}. If the test function evaluates to
-#' \code{\link{TRUE}} then the argument, \code{x}, is returned. If
-#' it does not return \code{\link{TRUE}} then the failure message is given.
+#' \code{ValidityMessager} objects have an
 #'
 #' @param test_function Object that is coercible to a \code{\link{function}},
 #' typically a function that will return a length-1 \code{\link{logical}}
@@ -14,8 +11,18 @@
 #' @param ... Length-1 \code{\link{character}} vectors to display
 #' if \code{test_function} does not return \code{TRUE}.
 #'
-#' @return Object of class \code{ValidityMessager} containing a \code{check}
-#' method that will return \code{TRUE} or fail with \code{fail_message}.
+#' @returns Object of class \code{ValidityMessager} containing the following
+#' methods.
+#'
+#' * `$check(x)` -- Returns \code{TRUE} if `test_function(x)` evaluates to
+#' `TRUE` and otherwise fails with an error message derived from `...`.
+#' * `$assert(x)` -- If `test_function(x)` evaluates to `TRUE` then the
+#' argument, \code{x}, is returned. If it does not return `TRUE` then an
+#' error message derived from `...` is given.
+#' * `$is_true(x)` -- Returns \code{TRUE} if `test_function(x)` evaluates
+#' to `TRUE`, and otherwise returns `FALSE`.
+#'
+#' @returns description
 #'
 #' @examples
 #' is_numeric = ValidityMessager(is.numeric, "not numeric")
@@ -34,6 +41,7 @@
 ValidityMessager = function(test_function, ...) {
   self = Base()
   self$.test_function = as.function(test_function)
+  self$.failed_object_summarizer = str
   self$.fail_message = pasten(...)
   stopifnot(length(formals(args(self$.test_function))) == 1L)
   self$.error = function(test_result) inherits(test_result, "try-error")
@@ -56,6 +64,7 @@ ValidityMessager = function(test_function, ...) {
   self$assert = function(x) {
     result = try(self$.test_function(x), silent = TRUE)
     if (isTRUE(result)) return(x)
+    self$.failed_object_summarizer(x)
     if (isFALSE(result)) stop(self$.fail_message)
     if (self$.error(result)) stop(self$.test_error_message(result))
     stop(self$.test_inconclusive_message(result))
@@ -63,6 +72,7 @@ ValidityMessager = function(test_function, ...) {
   self$check = function(x) {
     result = try(self$.test_function(x), silent = TRUE)
     if (isTRUE(result)) return(TRUE)
+    self$.failed_object_summarizer(x)
     if (isFALSE(result)) stop(self$.fail_message)
     if (self$.error(result)) stop(self$.test_error_message(result))
     stop(self$.test_inconclusive_message(result))
@@ -71,6 +81,32 @@ ValidityMessager = function(test_function, ...) {
     return(isTRUE(try(self$.test_function(x), silent = TRUE)))
   }
   return_object(self, "ValidityMessager")
+}
+
+
+#' All Valid
+#'
+#' @export
+AllValid = function(...) {
+  self = Base()
+  validity = ValidityMessager(
+    Is("ValidityMessager"),
+    "not a validity messager"
+  )
+  self$messagers = lapply(list(...), validity$assert)
+  self$assert = function(x) {
+    for (m in self$messagers) x = m$assert(x)
+    x
+  }
+  self$check = function(x) for (m in self$messagers) m$check(x)
+  self$is_true = function(x) {
+    for (m in self$messagers) {
+      outcome = m$is_true(x)
+      if (!outcome) return(outcome)
+    }
+    outcome
+  }
+  return_object(self, "AllValid")
 }
 
 

@@ -93,6 +93,12 @@ Not = function(basic_tester) {
 TestPipeline = function(...) {
   self = Test()
   self$.stages = list(...)
+  if (inherits(rev(self$.stages)[[1L]], "Summarizer")) {
+    warning(
+      "Likely developer error: ",
+      "Test pipelines shouldn't end in Summarizers"
+    )
+  }
   self$apply = function(x) {
     for (stage in self$.stages) {
       x = stage$apply(x)
@@ -281,9 +287,41 @@ TestSubset = function(set) {
   self = Test()
   self$.set = set
   self$apply = function(x) {
-    all(x %in% self$.set)
+    is_member = x %in% self$.set
+    pass = all(is_member)
+    if (!pass) {
+      message(
+        "\nValidity Failure -- Missing from Set:\n",
+        paste(x[!is_member], collapse = "\n")
+      )
+    }
+    pass
   }
   return_object(self, "TestSubset")
+}
+
+#' Length-Zero Vector Test
+#'
+#' Test that the input is a vector of length zero, and prints the
+#' elements that exist.
+#'
+#' @return Object of class \code{\link{Test}} that tests that a vector
+#' has zero length.
+#'
+#' @export
+TestLenZero = function() {
+  self = Test()
+  self$apply = function(x) {
+    pass = isTRUE(length(x) == 0L)
+    if (!pass) {
+      message(
+        "\nValidity Failure -- Bad Elements:\n",
+        paste(as.character(x), collapse = "\n")
+      )
+    }
+    pass
+  }
+  return_object(self, "TestLenZero")
 }
 
 #' Test True

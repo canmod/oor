@@ -16,17 +16,25 @@ which provides a way to compose object tests.}
 if \code{test_function} does not return \code{TRUE}.}
 }
 \value{
-Object of class \code{ValidityMessager} containing a \code{check}
-method that will return \code{TRUE} or fail with \code{fail_message}.
+Object of class \code{ValidityMessager} containing the following
+methods.
+\itemize{
+\item \verb{$check(x)} -- Returns \code{TRUE} if \code{test_function(x)} evaluates to
+\code{TRUE} and otherwise fails with an error message derived from \code{...}.
+\item \verb{$assert(x)} -- If \code{test_function(x)} evaluates to \code{TRUE} then the
+argument, \code{x}, is returned. If it does not return \code{TRUE} then an
+error message derived from \code{...} is given.
+\item \verb{$is_true(x)} -- Returns \code{TRUE} if \code{test_function(x)} evaluates
+to \code{TRUE}, and otherwise returns \code{FALSE}.
+}
+
+description
 }
 \description{
 Couple a test function with a failure message
 }
 \details{
-\code{ValidityMessager} objects have an \code{assert} method
-with one argument, \code{x}. If the test function evaluates to
-\code{\link{TRUE}} then the argument, \code{x}, is returned. If
-it does not return \code{\link{TRUE}} then the failure message is given.
+\code{ValidityMessager} objects have an
 }
 \examples{
 is_numeric = ValidityMessager(is.numeric, "not numeric")

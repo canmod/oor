@@ -21,6 +21,7 @@ return_object.Base = function(self, class) {
   clean_method_environment(parent.frame())
   object = structure(self, class = c(class, unique(class(self))))
   validate_object(object)
+  debug_methods(object)
   return(object)
 }
 
