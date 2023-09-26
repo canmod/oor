@@ -62,6 +62,7 @@ ValidityMessager = function(test_function, ...) {
     )
   }
   self$assert = function(x) {
+    force(x) ## silences 'interrupted promise evaluation' -- is this a good idea?
     result = try(self$.test_function(x), silent = TRUE)
     if (isTRUE(result)) return(x)
     self$.failed_object_summarizer(x)
@@ -70,6 +71,7 @@ ValidityMessager = function(test_function, ...) {
     stop(self$.test_inconclusive_message(result))
   }
   self$check = function(x) {
+    force(x) ## silences 'interrupted promise evaluation' -- is this a good idea?
     result = try(self$.test_function(x), silent = TRUE)
     if (isTRUE(result)) return(TRUE)
     self$.failed_object_summarizer(x)
@@ -78,6 +80,7 @@ ValidityMessager = function(test_function, ...) {
     stop(self$.test_inconclusive_message(result))
   }
   self$is_true = function(x) {
+    force(x) ## silences 'interrupted promise evaluation' -- is this a good idea?
     return(isTRUE(try(self$.test_function(x), silent = TRUE)))
   }
   return_object(self, "ValidityMessager")
