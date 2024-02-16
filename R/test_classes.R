@@ -292,7 +292,9 @@ TestSubset = function(set) {
     if (!pass) {
       message(
         "\nValidity Failure -- Missing from Set:\n",
-        paste(x[!is_member], collapse = "\n")
+        paste(x[!is_member], collapse = "\n"),
+        "\nValid Set Members:\n",
+        paste(self$.set, colapse = " ")
       )
     }
     pass

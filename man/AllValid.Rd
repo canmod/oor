@@ -6,6 +6,9 @@
 \usage{
 AllValid(...)
 }
+\arguments{
+\item{...}{A list of \code{\link{ValidityMessager}} objects.}
+}
 \description{
 All Valid
 }

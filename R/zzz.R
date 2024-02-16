@@ -15,8 +15,9 @@ DebugList = function() {
     self$.objects$.remove(method)
   }
   self$list_flagged = function() {
-    data.frame(method = self$.methods, class = self$.classes)
+    list(method = self$.methods, class = self$.classes)
   }
+  self$print_flagged = function() as.data.frame(self$list_flagged())
   self$undebug = function(method) self$.objects$.undebug(method)
   self$debug = function(method) self$.objects$.debug(method)
   self$list_objects = function() self$.objects$.objects
@@ -96,6 +97,7 @@ oor_debug = DebugList()
 
 
 .onLoad <- function(lib, pkg) {
+  options(oor_catch_dollar = TRUE)
 }
 
 .onUnload <- function(libpath) {

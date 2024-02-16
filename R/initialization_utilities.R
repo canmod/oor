@@ -27,16 +27,65 @@ clean_method_environment = function(e) {
 }
 
 debug_methods = function(object) {
-  l = oor::oor_debug$list_flagged()
+  l = oor_debug$list_flagged()
   i = vapply(l$class, function(x) inherits(object, x), logical(1L))
-  candidate_methods = l[i, , drop = FALSE]$method
-  i = vapply(candidate_methods, oor::oor_debug$.objects$.is_method, logical(1L), object)
+  candidate_methods = l$method[i]
+  i = vapply(candidate_methods, oor_debug$.objects$.is_method, logical(1L), object)
   methods_to_debug = candidate_methods[i]
-  oor::oor_debug$.objects$.is_method(methods_to_debug[1], object)
+  oor_debug$.objects$.is_method(methods_to_debug[1], object)
   for (j in methods_to_debug) debug(object[[j]])
   if (isTRUE(length(methods_to_debug) > 0L)) {
-    oor::oor_debug$.objects$.add(methods_to_debug, object)
+    oor_debug$.objects$.add(methods_to_debug, object)
   }
+}
+
+#' Save Parent Methods
+#'
+#' Save the methods in an object in a list so that they can be used
+#' in methods that will be overridden.
+#'
+#' @param object Object for saving the methods of that object in a list
+#' called `parent` (or whatever is passed to `parent_name`).
+#' @param parent_name Name of the list to be placed in `object` containing
+#' references to the methods in `object`.
+#'
+#' @examples
+#' A = function(x) {
+#'   self = Base()
+#'   self$x = x
+#'   self$f = function() self$x
+#'   return_object(self, "A")
+#' }
+#' B = function(x) {
+#'   self = A(x)
+#'   save_parent_methods(self)
+#'   self$f = function() self$parent$f() + 100
+#'   return_object(self, "B")
+#' }
+#' A(100)$f() ## 100
+#' B(100)$f() ## 200
+#'
+#' @export
+save_parent_methods = function(object, parent_name = "parent") {
+  method_names = (object
+   |> eapply(is.function)
+   |> Filter(f = isTRUE)
+   |> names()
+  )
+  object[[parent_name]] = list()
+  for (nm in method_names) object[[parent_name]][[nm]] = object[[nm]]
+  object
+}
+
+#' Change Method Defaults
+#'
+#' @param method Function definition.
+#' @param ... New default values for the arguments
+#'
+#' @export
+change_defaults = function(method, ...) {
+  defaults = list(...)
+  for (arg in names(defaults)) formals(method)[[arg]] = defaults[[arg]]
 }
 
 #' Validate Object

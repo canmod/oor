@@ -37,6 +37,7 @@
 #' try(HoldANumber("a")) ## error message
 #' HoldANumber(1) ## success
 #'
+#' @importFrom utils capture.output
 #' @export
 ValidityMessager = function(test_function, ...) {
   self = Base()
@@ -88,6 +89,8 @@ ValidityMessager = function(test_function, ...) {
 
 
 #' All Valid
+#'
+#' @param ... A list of \code{\link{ValidityMessager}} objects.
 #'
 #' @export
 AllValid = function(...) {

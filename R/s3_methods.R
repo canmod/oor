@@ -2,6 +2,7 @@
 # these are like python-style __dunder__ methods
 # such as __str__, __eq__
 
+#' @importFrom utils str lsf.str
 #' @export
 print.Base = function(x, ...) {
   str(x)
@@ -9,18 +10,27 @@ print.Base = function(x, ...) {
   invisible(x)
 }
 
-#' @export
-`$.Base` = function(x, name) {
-  ## make sure that you get an error if
-  ## a name cannot be found in self
-  get(name, envir = x)
-}
+# @export
+# `$.Base` = function(x, name) {
+#   if (getOption("oor_catch_dollar")) return(get(name, envir = x))
+#   ## make sure that you get an error if
+#   ## a name cannot be found in self
+#   y = try(get(name, envir = x), silent = TRUE)
+#   if (inherits(y, "try-error")) {
+#     stop("\n"
+#       , "Could not find component ", name, "\n"
+#       , "in object of class:\n"
+#       , paste0(class(x), collapse = " ")
+#     )
+#   }
+#   y
+# }
 
 #' @export
 return_object.Base = function(self, class) {
   clean_method_environment(parent.frame())
   object = structure(self, class = c(class, unique(class(self))))
-  validate_object(object)
+  #validate_object(object)
   debug_methods(object)
   return(object)
 }
