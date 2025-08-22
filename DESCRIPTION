@@ -2,10 +2,10 @@ Package: oor
 Title: Object Oriented R
 Version: 0.0.1
 Authors@R: 
-    person("Steve", "Walker", , "swalk@mcmaster.ca", role = c("aut", "cre"))
+    person("Steve", "Walker", , "stevencarlislewalker@gmail.com", role = c("aut", "cre"))
 Description: Lightweight tools for building object-oriented R code.
 License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.1
+RoxygenNote: 7.3.2.9000
